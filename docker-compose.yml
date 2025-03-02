@@ -1,0 +1,32 @@
+services:
+  backend:
+    image: starcar-backend:dev
+    build: ./services/backend
+    command: python cli.py run -h 0.0.0.0
+    ports:
+      - 5001:5000
+    env_file:
+      - ./services/backend/.env.dev
+    depends_on:
+      - db
+  db:
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=starcar_dev
+  frontend:
+    image: starcar-frontend:dev
+    build: ./services/frontend
+    command: npm run dev
+    ports:
+      - 3001:3000
+    env_file:
+      - ./services/frontend/.env.dev
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

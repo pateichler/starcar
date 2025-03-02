@@ -1,0 +1,25 @@
+FROM python:3.13-slim-bookworm
+
+RUN mkdir -p /home/app
+
+RUN addgroup --system app && adduser --system --group app
+
+ENV APP_HOME=/home/app/starcar
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+
+# set python environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+COPY ./requirements.txt $APP_HOME/requirements.txt
+RUN pip install -r requirements.txt
+COPY ./requirements.prod.txt $APP_HOME/requirements.prod.txt
+RUN pip install -r requirements.prod.txt
+
+COPY . $APP_HOME/
+
+RUN chown -R app:app $APP_HOME
+
+USER app

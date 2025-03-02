@@ -1,0 +1,21 @@
+services:
+  backend:
+    image: starcar-backend:latest
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile.prod
+    command: gunicorn --bind 0.0.0.0:5000 --worker-class eventlet -w 1 starcar:app
+    ports:
+      - 5001:5000
+    env_file:
+      - ./services/backend/.env.prod
+  frontend:
+    image: starcar-frontend:latest
+    build:
+      context: ./services/frontend
+      dockerfile: Dockerfile.prod
+    command: node server.js
+    ports:
+      - 3001:3000
+    env_file:
+      - ./services/frontend/.env.prod
