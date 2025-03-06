@@ -13,6 +13,7 @@ from starcar.models import (
 )
 from starcar.utils import get_telem_dist, get_date_string
 from starcar.routes import is_authorized
+from starcar.analysis_controller import analysis_controller
 
 
 def datetime_now():
@@ -141,8 +142,9 @@ def stop_stream(json_data):
     #     .total_seconds()
     # )
 
-    # TODO: Start analysis here
     db.session.commit()
+
+    analysis_controller.run_analysis(mission.id)
 
     # return "OK", duration.hours, duration.minutes
     return "OK"
