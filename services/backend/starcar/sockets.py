@@ -13,7 +13,7 @@ from starcar.models import (
 )
 from starcar.utils import get_telem_dist, get_date_string
 from starcar.routes import is_authorized
-from starcar.analysis_controller import analysis_controller
+from starcar.analysis_runner import analysis_runner
 
 
 def datetime_now():
