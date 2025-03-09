@@ -144,7 +144,7 @@ def stop_stream(json_data):
 
     db.session.commit()
 
-    analysis_controller.run_analysis(mission.id)
+    analysis_runner.run_analysis(mission.id)
 
     # return "OK", duration.hours, duration.minutes
     return "OK"
