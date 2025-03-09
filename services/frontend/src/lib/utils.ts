@@ -23,6 +23,17 @@ export function formatDuration(dateStringStart: string, dateStringEnd?: string){
     return `${Math.floor(diff / 1000)}s`
 }
 
+export function formatChartDuration(milliseconds: number){
+    const rawSeconds = Math.floor(milliseconds / 1000);
+
+    const hours = Math.floor(rawSeconds / 3600);
+    const hourSeconds = rawSeconds - hours * 3600;
+    const minutes = Math.floor(hourSeconds / 60);
+    const seconds = hourSeconds % 60;
+
+    return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
 export function convertTimestampToDate(timestamp: string): string {
     return new Intl.DateTimeFormat('nl', {
         hour: '2-digit',
