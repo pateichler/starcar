@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "starcar_pateichler"
+version = "0.0.1"
+authors = [
+  { name="Patrick Eichler" },
+]
+description = "API package for starcar"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+
+dependencies = [
+	"requests==2.*"
+]
+
+[project.urls]
+Homepage = "https://github.com/pateichler/starcar"
+
+[tool.hatch.build.targets.wheel]
+packages = ["starcar"]
