@@ -20,8 +20,8 @@ export function formatDuration(dateStringStart: string, dateStringEnd?: string){
     if(minutes > 0)
         return `${minutes}m`
     
-    return `${Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))}s`
-  }
+    return `${Math.floor(diff / 1000)}s`
+}
 
 export function convertTimestampToDate(timestamp: string): string {
     return new Intl.DateTimeFormat('nl', {
