@@ -37,7 +37,10 @@ export default function TelemetryViewer({telemetry}: {telemetry: TelemetryData|n
         id: 'TelemetryLayer',
         data: [telemetry],
         
-        getPath: (d: TelemetryData) => d.data.map(p => [p.lng, p.latt]),
+        getPath: (d: TelemetryData) => d.data.map(p => {
+            const c: [longitude: number, lattitude: number] =[p.lng, p.latt];
+            return c;
+        }),
         // getColor: [230, 50, 30],
         // getColor: d => getTelemetryColors(d, [230, 50, 30], [30, 230, 43]), 
         getColor: (d: TelemetryData) => getTelemetryColors(d, [230, 50, 30], [30, 230, 43]), 
