@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import RawDataPanel from "./rawDataPanel";
 import TelemetryPanel from "./telemetryPanel";
 import InteractContextComponent from "./InteractContext";
+import { Suspense } from "react";
 
 
 function timeUpdate(time: number){
@@ -29,8 +30,12 @@ export default async function Page({params,}: {
             <p>{mission.date_start}</p>
             
             <InteractContextComponent>
-                <RawDataPanel mission={mission} />
-                <TelemetryPanel mission={mission} />
+                <Suspense>
+                    <RawDataPanel mission={mission} />
+                </Suspense>
+                <Suspense>
+                    <TelemetryPanel mission={mission} />
+                </Suspense>
             </InteractContextComponent>
         </div>
     );
