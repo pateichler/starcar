@@ -34,11 +34,22 @@ export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
     if (rawData == null)
         return <div>Error in retreiving data.</div>
 
+    if (rawData.length == 0)
+        return <div>Data is empty.</div>
+
     // const { setTime } = useContext(InteractContext);
     // const moveCallback = generateCallback(setTime);
     // const moveCallback = generateCallback(function(t:number){});
     // console.log("Update data graph!");
     // <LineChart width={480} height={480} data={rawData} syncId={"data"} onMouseMove={moveCallback} />
+
+    const gauge1Start = rawData[0].gauge.gauge_1;
+    const gauge2Start = rawData[0].gauge.gauge_2;
+
+    rawData.forEach(s => {
+        s.gauge.gauge_1 -= gauge1Start;
+        s.gauge.gauge_2 -= gauge2Start;
+    });
 
     return (
         <div>
