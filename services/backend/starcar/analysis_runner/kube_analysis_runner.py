@@ -1,4 +1,5 @@
 from typing import Dict
+from os import environ
 
 from kubernetes import client, config
 
@@ -12,7 +13,7 @@ if app.config["DEBUG"] is True:
 # TODO: Load in
 analysis_config = [{
   "name": "Analysis 1",
-  "image_name": "pateichler/starcar-analysis1"
+  "image_name": "pateichler/starcar-analysis1:latest"
 }]
 
 
@@ -21,6 +22,8 @@ class KubeAnalysisRunner(AnalysisRunner):
     def __init__(self):
         config.load_incluster_config()
         self.api_instance = client.BatchV1Api()
+        # API route for analysis containers
+        self.api_route = environ.get("API_ROUTE")
 
     def create_job_object(self, name: str, image_name: str, envs: Dict[str, str]):
         k_envs = [client.V1EnvVar(name=k, value=v) for k, v in envs.items()]
@@ -59,9 +62,13 @@ class KubeAnalysisRunner(AnalysisRunner):
             "MISSION_ID": str(mission_id)
         }
         
-        job = self.create_job_object(name, image_name, envs)
+        if self.api_route is not None:
+            envs["API_ROUTE"] = self.api_route
         
-        response = self.create_job(job, "starcar")
+        job = self.create_job_object(name, image_name, envs)
+        namespace = environ.get("JOB_NAMESPACE", "starcar")
+
+        response = self.create_job(job, namespace)
         print(f"Job created. status='{str(response.status)}'")
 
     def run_analysis(self, mission_id: int):
