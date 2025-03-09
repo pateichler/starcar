@@ -31,14 +31,17 @@ export default function TelemetryViewer({telemetry}: {telemetry: TelemetryData|n
     // console.log("Curtime: " + curTime);
 
     const startTime = telemetry.data[0].time;
+    const lineColors = getTelemetryColors(telemetry, [230, 50, 30], [30, 230, 43]);
 
-    const layer = new PathLayer<TelemetryPoint>({
+    const layer = new PathLayer<TelemetryData>({
         id: 'TelemetryLayer',
-        data: telemetry.data,
-    
-        getPath: (d: TelemetryPoint) => [d.lng, d.latt],
+        data: [telemetry],
+        
+        getPath: (d: TelemetryData) => d.data.map(p => [p.lng, p.latt]),
+        // getColor: [230, 50, 30],
         // getColor: d => getTelemetryColors(d, [230, 50, 30], [30, 230, 43]), 
-        getColor: getTelemetryColors(telemetry, [230, 50, 30], [30, 230, 43]), 
+        getColor: (d: TelemetryData) => getTelemetryColors(d, [230, 50, 30], [30, 230, 43]), 
+        // getColor: lineColors, 
         getWidth: 100,
         pickable: false,
         widthMinPixels: 2,
