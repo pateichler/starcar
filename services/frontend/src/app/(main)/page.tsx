@@ -15,16 +15,12 @@ export default async function Home() {
       <div>
         {missions.map((mission) => (
           <Link key={mission.id} href={`/mission/${mission.id}`}>
-            <div>
-              <h5>{formatDate(mission.date_start)}</h5>
+            <div className={styles.missionItem}>
+              <h5 className="date">{formatDate(mission.date_start)}</h5>
               <h2>{mission.name}</h2>
               <div>
                 <p><span>Distance:</span> {mission.total_dist.toFixed(2)}km</p>
                 <p><span>Duration:</span> {formatDuration(mission.date_start, mission.date_end)}</p>
-              </div>
-              <div>
-                <span>Analysis 1</span>
-                <span>Analysis 2</span>
               </div>
             </div>
           </Link>

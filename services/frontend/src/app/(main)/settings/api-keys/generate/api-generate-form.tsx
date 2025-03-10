@@ -44,9 +44,7 @@ export default function APIGenerateForm(){
 
 
                 <FormGroup labelName="Description" error={result.error}>
-                    <p className="test">Test</p>
                     <textarea name="description" />
-                    <p className="argg">Test</p>
                 </FormGroup>
                 
                 <button aria-disabled={isPending}>Generate</button>

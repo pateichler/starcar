@@ -1,3 +1,18 @@
-.header{
-  color: red;
+.missionItem{
+  border: 2px solid white;
+  border-radius: 10px;
+  margin: 10px 0px; 
+  padding: 10px; 
+}
+
+.missionItem:hover{
+  background-color: rgb(23, 23, 23);
+}
+
+.missionItem h2{
+  margin-top: 0;
+}
+
+.missionItem h5{
+  margin-bottom: 5px;
 }
