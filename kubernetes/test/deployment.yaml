@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starcar-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: starcar-backend
+          image: pateichler/starcar-backend:latest
+          imagePullPolicy: IfNotPresent
+          command: ["gunicorn", "--bind", "0.0.0.0:5000", "--worker-class", "eventlet", "-w", "1", "starcar:app"]
+          envFrom:
+            - configMapRef:
+                name: starcar-backend-config
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starcar-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: starcar-frontend
+          image: pateichler/starcar-frontend:latest
+          imagePullPolicy: IfNotPresent
+          command: ["node", "server.js"]
+          envFrom:
+            - configMapRef:
+                name: starcar-frontend-config
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starcar-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: starcar-db
+          image: postgres:17
+          env:
+          - name: POSTGRES_USER
+            value: dev
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: starcar_dev

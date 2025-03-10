@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starcar-backend-config
+  namespace: starcar
+data:
+  FLASK_APP: "starcar/__init__.py"
+  FLASK_DEBUG: "0"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starcar-frontend-config
+  namespace: starcar
+data:
+  API_ROUTE: "http://starcar-backend-service:5001/"

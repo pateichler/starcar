@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starcar-backend-config
+data:
+  FLASK_APP: "starcar/__init__.py"
+  FLASK_DEBUG: "1"
+  STARCAR_SECRET_KEY: "secret!"
+  STARCAR_SQLALCHEMY_DATABASE_URI: "postgresql://dev:password@starcar-db-service:5432/starcar_dev"
+
+  API_ROUTE: "http://starcar-backend-service:5050/"
+  JOB_NAMESPACE: "default"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: starcar-frontend-config
+data:
+  API_ROUTE: "http://starcar-backend-service:5050/"

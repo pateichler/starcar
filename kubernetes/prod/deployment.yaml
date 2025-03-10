@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starcar-backend
+  namespace: starcar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: starcar-backend
+          image: pateichler/starcar-backend:latest
+          command: ["gunicorn", "--bind", "0.0.0.0:5000", "--worker-class", "eventlet", "-w", "1", "starcar:app"]
+          envFrom:
+            - configMapRef:
+                name: starcar-backend-config
+          env:
+          - name: STARCAR_SQLALCHEMY_DATABASE_URI
+            valueFrom:
+              secretKeyRef:
+                name: database-uri
+                key: uri
+          - name: STARCAR_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: secret-key
+                key: key
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starcar-frontend
+  namespace: starcar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: starcar-frontend
+          image: pateichler/starcar-frontend:latest
+          command: ["node", "server.js"]
+          envFrom:
+            - configMapRef:
+                name: starcar-frontend-config
