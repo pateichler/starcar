@@ -61,6 +61,34 @@ def get_mission(mission_id):
     return jsonify(mission.to_dict())
 
 
+@app.route('/mission/<int:mission_id>/delete', methods=['POST'])
+def delete_mission(mission_id):
+    mission = db.get_or_404(Mission, mission_id)
+
+    db.session.delete(mission)
+    db.session.commit()
+
+    return "", 200
+
+
+class RenameSchema(Schema):
+    name = fields.String(required=True)
+
+
+@app.route('/mission/<int:mission_id>/rename', methods=['POST'])
+def rename_mission(mission_id):
+    mission = db.get_or_404(Mission, mission_id)
+
+    try:
+        data = RenameSchema().load(request.get_json())
+    except ValidationError as err:
+        return jsonify(err.messages), 400
+
+    mission.name = data["name"]
+    db.session.commit()
+
+    return "", 200
+
 # @app.route('/mission/<int:mission_id>/data', methods=['GET'])
 # def get_mission_data(mission_id):
 #     mission = db.get_or_404(Mission, mission_id)
