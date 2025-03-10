@@ -9,7 +9,7 @@ from starcar.models import Mission, RawData, APIKey, SitePassword
 
 # TODO CHANGE BACK TO OLD VERSION
 # PUBLIC_ROUTES = ["index", "login"]
-PUBLIC_ROUTES = ["index", "login", "new_mission"]
+PUBLIC_ROUTES = ["index", "login"]
 
 
 def datetime_now():

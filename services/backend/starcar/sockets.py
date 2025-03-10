@@ -5,11 +5,11 @@ from datetime import timezone
 import zoneinfo as zi
 
 from sqlalchemy import exc
-from flask_socketio import emit, disconnect
+from flask_socketio import emit, disconnect, send
 
 from starcar import socketio, db
 from starcar.models import (
-    Mission, StrainGauge, Acceleration, SensorData, TelemetryData
+    Mission, StrainGauge, Acceleration, SensorData, TelemetryData, RawData
 )
 from starcar.utils import get_telem_dist, get_date_string
 from starcar.routes import is_authorized
@@ -52,6 +52,16 @@ def add_telemetry_data(mission, data):
         last_telem = telemetry
 
 
+def create_new_mission() -> Mission:
+    mission = Mission(
+        name="Pending mission", date_start=datetime_now(), data=RawData()
+    )
+    db.session.add(mission)
+    db.session.commit()
+
+    return mission
+
+
 def authenticated_only(f):
     @functools.wraps(f)
     def wrapped(*args, **kwargs):
@@ -65,7 +75,14 @@ def authenticated_only(f):
 @socketio.on('connect')
 @authenticated_only
 def connect_handler():
-    print("Connected!")
+    pass
+
+
+@socketio.on("create-mission")
+@authenticated_only
+def crreate_mission():
+    mission = create_new_mission()
+    return mission.id
 
 
 @socketio.on("stream-data")
@@ -100,6 +117,10 @@ def stream_data(json_data):
 @authenticated_only
 def stop_stream(json_data):
     data = json.loads(str(json_data))
+
+    if data is None or data.get("missionID") is None:
+        emit("error", 'Unable to get mission ID')
+        return
 
     try:
         mission = db.session.get(Mission, data["missionID"])
