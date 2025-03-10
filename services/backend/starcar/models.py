@@ -49,8 +49,14 @@ class SensorData(db.Model):
     data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"))
 
     time: Mapped[int] = mapped_column()
-    acceleration: Mapped["Acceleration"] = relationship(back_populates="sensor")
-    strain_gauge: Mapped["StrainGauge"] = relationship(back_populates="sensor")
+    acceleration: Mapped["Acceleration"] = relationship(
+        back_populates="sensor",
+        cascade="all, delete"
+    )
+    strain_gauge: Mapped["StrainGauge"] = relationship(
+        back_populates="sensor",
+        cascade="all, delete"
+    )
 
     def to_dict(self):
         return {
@@ -85,8 +91,10 @@ class RawData(db.Model):
     mission_id: Mapped[int] = mapped_column(ForeignKey("mission.id"))
     mission: Mapped["Mission"] = relationship(back_populates="data")
 
-    sensor: Mapped[List["SensorData"]] = relationship()
-    telemetry: Mapped[List["TelemetryData"]] = relationship()
+    sensor: Mapped[List["SensorData"]] = relationship(cascade="all, delete")
+    telemetry: Mapped[List["TelemetryData"]] = relationship(
+        cascade="all, delete"
+    )
 
     @hybrid_property
     def total_dist(self):
@@ -156,8 +164,12 @@ class Mission(db.Model):
     date_start: Mapped[dt.datetime] = mapped_column()
     date_end: Mapped[Optional[dt.datetime]] = mapped_column()
 
-    data: Mapped["RawData"] = relationship(back_populates="mission")
-    analysis: Mapped[List["Analysis"]] = relationship(back_populates="mission")
+    data: Mapped["RawData"] = relationship(
+        back_populates="mission", cascade="all, delete"
+    )
+    analysis: Mapped[List["Analysis"]] = relationship(
+        back_populates="mission", cascade="all, delete"
+    )
 
     is_pending: Mapped[bool] = mapped_column(default=True)
 
