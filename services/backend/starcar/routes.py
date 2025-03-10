@@ -7,8 +7,6 @@ from jwt.exceptions import InvalidTokenError
 from starcar import app, db, flask_jwt
 from starcar.models import Mission, RawData, APIKey, SitePassword
 
-# TODO CHANGE BACK TO OLD VERSION
-# PUBLIC_ROUTES = ["index", "login"]
 PUBLIC_ROUTES = ["index", "login"]
 
 
@@ -279,7 +277,6 @@ class GenerateAPIKeySchema(Schema):
 @app.route('/api-key/new', methods=['POST'])
 def generate_api_key():
     raw_data = request.get_json()
-    print(raw_data)
     schema = GenerateAPIKeySchema()
 
     try:
@@ -388,10 +385,6 @@ def verify_api_token(token):
         return None
 
     token_obj = db.session.get(APIKey, token_id)
-
-    if token_obj is not None:
-        print(f"Verified token with ID: {token_obj.id}!")
-        print(f'Token value: {token}')
 
     return token_obj if token_obj is not None and token_obj.validate(token_val) else None
 
