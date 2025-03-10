@@ -16,6 +16,9 @@ export default function TelemetryViewer({telemetry}: {telemetry: TelemetryData|n
     if (telemetry == null)
         return <div>No telemetry available.</div>
     
+    if (telemetry.data.length == 0)
+        return <div>Telemetry data is empty.</div>
+
     // telemetry.path.push([-93, 27]);
     // const path = {"path": telemetry} as TelemetryPath;
 
