@@ -32,22 +32,17 @@ const LineChart = dynamic( () => (import("recharts").then(recharts => recharts.L
 } )
 
 export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
+    const [activeSeries, setActiveSeries] = useState<Array<string>>([]);
+
     if (rawData == null)
         return <div>Error in retreiving data.</div>
 
     if (rawData.length == 0)
         return <div>Data is empty.</div>
 
-    // const { setTime } = useContext(InteractContext);
-    // const moveCallback = generateCallback(setTime);
-    // const moveCallback = generateCallback(function(t:number){});
-    // console.log("Update data graph!");
-    // <LineChart width={480} height={480} data={rawData} syncId={"data"} onMouseMove={moveCallback} />
-
     const accelerationData = convertRawAcceleration(rawData);
     const strainData = convertRawGaugeToStrain(rawData);
-
-    const [activeSeries, setActiveSeries] = useState<Array<string>>([]);
+    
     const handleLegendClick = (dataKey: string) => {
       if (activeSeries.includes(dataKey)) {
         setActiveSeries(activeSeries.filter(el => el !== dataKey));
