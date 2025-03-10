@@ -6,7 +6,7 @@ export default async function Page() {
             <h1>Settings</h1>
             <div>
                 <Link href={"/settings/api-keys"} className="btn">API Keys</Link>
-                <Link href={"/settings/site-password"} className="btn">Change Site Passowrd</Link>
+                <Link href={"/settings/site-password"} className="btn">Change Site Password</Link>
             </div>
         </div>
     )

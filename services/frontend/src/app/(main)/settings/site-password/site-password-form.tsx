@@ -14,7 +14,7 @@ export default function SitePasswordFrom(){
 
     return (
         <div>
-            <h1>Generate API Key</h1>
+            <h1>Change site password</h1>
             <form action={formAction}>
                 <FormGroup labelName="New password" error={error}>
                     <input type="password" name="password" required />
