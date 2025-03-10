@@ -176,7 +176,7 @@ class Mission(db.Model):
     def to_dict(self):
         dict_vars = [
             ("id", self.id), ("name", self.name), 
-            ("date_start", self.date_start.isoformat()), 
+            ("date_start", self.date_start.replace(tzinfo=timezone.utc).isoformat()), 
             ("is_pending", self.is_pending),
             ("total_dist", self.data.total_dist)
         ]
@@ -184,7 +184,7 @@ class Mission(db.Model):
         d = {k: v for k, v in dict_vars if v is not None}
         d["analysis"] = [a.to_dict() for a in self.analysis]
         if self.date_end is not None:
-            d["date_end"] = self.date_end.isoformat()
+            d["date_end"] = self.date_end.replace(tzinfo=timezone.utc).isoformat()
 
         return d
 

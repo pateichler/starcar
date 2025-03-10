@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import FormGroup from "@/components/form-group";
 import { deleteMission, renameMission } from "./missionControlBarAction";
 import { Mission } from "@/types/mission";
+import { formatDateWithTime } from "@/lib/utils";
 
 export default function MissionControlBar({mission}: {mission: Mission}){
     const [nameResult, renameAction, isRenamePending] = useActionState(
@@ -47,7 +48,7 @@ export default function MissionControlBar({mission}: {mission: Mission}){
             <div>
                 <button onClick={onDeleteButton}>Delete</button>
             </div>
-            <p>{mission.date_start}</p>
+            <p>{formatDateWithTime(mission.date_start)}</p>
         </div>
     );
 }

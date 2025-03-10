@@ -1,7 +1,14 @@
 export function formatDate(dateString: string){
     const date = new Date(dateString);
-  
+    
     return date.toLocaleDateString('en-US', {year: "numeric", month: "numeric", day: "2-digit"});
+}
+
+export function formatDateWithTime(dateString: string){
+    const date = new Date(dateString);
+  
+    const dString = formatDate(dateString);
+    return `${dString}, ${date.toLocaleTimeString()}`;
 }
   
 export function formatDuration(dateStringStart: string, dateStringEnd?: string){

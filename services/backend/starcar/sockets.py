@@ -2,6 +2,7 @@ import functools
 import json
 import datetime as dt
 from datetime import timezone
+import zoneinfo as zi
 
 from sqlalchemy import exc
 from flask_socketio import emit, disconnect
@@ -108,7 +109,13 @@ def stop_stream(json_data):
 
     mission.is_pending = False
     mission.date_end = datetime_now()
-    mission.name = get_date_string(mission.date_start)
+
+    # TEMP fix: Assuming client is in the central time zone, in future get time
+    # zone from client
+    start_local_time = mission.date_start.replace(
+        tzinfo=timezone.utc
+    ).astimezone(zi.ZoneInfo("US/Central"))
+    mission.name = get_date_string(start_local_time)
 
     # duration = dt.timedelta(
     #     (mission.date_end - mission.date_start.replace(tzinfo=timezone.utc))
