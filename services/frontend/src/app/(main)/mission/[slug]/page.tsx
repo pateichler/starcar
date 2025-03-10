@@ -4,6 +4,7 @@ import RawDataPanel from "./rawDataPanel";
 import TelemetryPanel from "./telemetryPanel";
 import InteractContextComponent from "./InteractContext";
 import { Suspense } from "react";
+import MissionControlBar from "./missionControlBar";
 
 
 function timeUpdate(time: number){
@@ -16,18 +17,14 @@ export default async function Page({params,}: {
 }) {
     const missionID = (await params).slug;
     const mission = await fetchMission(missionID);
-    
-    
 
     if(mission == null)
         notFound();
 
-    const test  = <TelemetryPanel mission={mission} />;
-    const test2 = [test];
+    
     return (
         <div>
-            <h1>{mission.name}</h1>
-            <p>{mission.date_start}</p>
+            <MissionControlBar mission={mission} />
             
             <InteractContextComponent>
                 <Suspense>

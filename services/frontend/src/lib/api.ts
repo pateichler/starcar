@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { CRED_COOKIE_NAME } from "@/config";
 import { APIKey } from "@/types/api-key";
-import { logout } from "@/app/(main)/logout-action";
 
 async function getAPIAuthHeader(): Promise<{Authorization: string}>{
     const cookieStore = cookies();
@@ -59,6 +58,14 @@ export async function fetchMission(missionID: number): Promise<Mission|null> {
         return null;
 
     return await data.json() as Mission;
+}
+
+export async function fetchRenameMission(missionID: number, name: string){
+    return await fectchPostJSON(`mission/${missionID}/rename`, {name: name});
+}
+
+export async function fetchDeleteMission(missionID: number){
+    return fetchAPI(`/mission/${missionID}/delete`, {'method': 'POST'});
 }
 
 export async function fetchMissionData(missionID: number): Promise<SensorData[]|null> {
