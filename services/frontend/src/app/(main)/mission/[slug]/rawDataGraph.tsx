@@ -7,6 +7,7 @@ import { convertTimestampToDate, formatChartDuration } from "@/lib/utils";
 import { CategoricalChartState } from "recharts/types/chart/types";
 import { InteractContext } from "./InteractContext";
 import { useState, useContext } from "react";
+import { convertRawAcceleration, convertRawGaugeToStrain } from "@/lib/dataUtils"
 
 
 // function generateCallback(onTimeUpdate: (time: number) => void): (nextState: CategoricalChartState, _: any) => void{
@@ -43,13 +44,8 @@ export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
     // console.log("Update data graph!");
     // <LineChart width={480} height={480} data={rawData} syncId={"data"} onMouseMove={moveCallback} />
 
-    const gauge1Start = rawData[0].gauge.gauge_1;
-    const gauge2Start = rawData[0].gauge.gauge_2;
-
-    rawData.forEach(s => {
-        s.gauge.gauge_1 -= gauge1Start;
-        s.gauge.gauge_2 -= gauge2Start;
-    });
+    const accelerationData = convertRawAcceleration(rawData);
+    const strainData = convertRawGaugeToStrain(rawData);
 
     const [activeSeries, setActiveSeries] = useState<Array<string>>([]);
     const handleLegendClick = (dataKey: string) => {
@@ -63,23 +59,27 @@ export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
     return (
         <div>
             <ResponsiveContainer width={"100%"} height={200}>
-                <LineChart width={480} height={480} data={rawData} syncId={"data"}>
-                    <Line hide={activeSeries.includes('acceleration.x')} name="X" type={"monotone"} dataKey={"acceleration.x"}  stroke={"#8884d8"} dot={false} />
-                    <Line hide={activeSeries.includes('acceleration.y')} name="Y" type={"monotone"} dataKey={"acceleration.y"}  stroke={"#20a418"} dot={false} />
-                    <Line hide={activeSeries.includes('acceleration.z')} name="Z" type={"monotone"} dataKey={"acceleration.z"}  stroke={"#9bbb04"} dot={false} />
-                    <YAxis />
+                <LineChart width={480} height={480} data={accelerationData} syncId={"data"}>
+                    <Line hide={activeSeries.includes('x')} name="X" type={"monotone"} dataKey={"x"}  stroke={"#8884d8"} dot={false} />
+                    <Line hide={activeSeries.includes('y')} name="Y" type={"monotone"} dataKey={"y"}  stroke={"#20a418"} dot={false} />
+                    <Line hide={activeSeries.includes('z')} name="Z" type={"monotone"} dataKey={"z"}  stroke={"#9bbb04"} dot={false} />
+                    <YAxis>
+                        <Label value={"Acceleration (m/s^2)"} angle={-90} position={"insideBottomLeft"} />    
+                    </YAxis>
                     <Tooltip />
                     <Legend verticalAlign="top" height={36} onClick={props => handleLegendClick(props.dataKey as string)} />
                 </LineChart>
             </ResponsiveContainer>
             <ResponsiveContainer width={"100%"} height={200}>
-                <LineChart width={480} height={480} data={rawData} syncId={"data"}>
-                    <Line hide={activeSeries.includes('gauge.gauge_1')} name="Left" type={"monotone"} dataKey={"gauge.gauge_1"}  stroke={"#8884d8"} dot={false} />
-                    <Line hide={activeSeries.includes('gauge.gauge_2')} name="Right" type={"monotone"} dataKey={"gauge.gauge_2"}  stroke={"#20a418"} dot={false} />
+                <LineChart width={480} height={480} data={strainData} syncId={"data"}>
+                    <Line hide={activeSeries.includes('gaugeLeft')} name="Left" type={"monotone"} dataKey={"gaugeLeft"}  stroke={"#8884d8"} dot={false} />
+                    <Line hide={activeSeries.includes('gaugeRight')} name="Right" type={"monotone"} dataKey={"gaugeRight"}  stroke={"#20a418"} dot={false} />
                     <XAxis dataKey={"time"} tickFormatter={formatChartDuration}>
                         <Label value="Mission time (T+ h:mm:ss)" offset={-5} position="insideBottom" />
                     </XAxis>
-                    <YAxis />
+                    <YAxis>
+                        <Label value={"Microstrain"} angle={-90} position={"insideBottomLeft"} />
+                    </YAxis>
                     <Tooltip />
                     <Legend verticalAlign="top" height={36} onClick={props => handleLegendClick(props.dataKey as string)} />
                 </LineChart>
