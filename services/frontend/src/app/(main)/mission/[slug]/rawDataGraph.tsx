@@ -80,7 +80,7 @@ export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
                         <Label value="Mission time (T+ h:mm:ss)" offset={-5} position="insideBottom" />
                     </XAxis>
                     <YAxis />
-                    <Tooltip formatter={(value, name, props) => ["test", "test2"]} />
+                    <Tooltip />
                     <Legend verticalAlign="top" height={36} onClick={props => handleLegendClick(props.dataKey as string)} />
                 </LineChart>
             </ResponsiveContainer>
