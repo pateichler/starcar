@@ -5,7 +5,9 @@ from marshmallow import Schema, fields, validate, ValidationError
 from jwt.exceptions import InvalidTokenError
 
 from starcar import app, db, flask_jwt
-from starcar.models import Mission, RawData, APIKey, SitePassword
+from starcar.models import (
+    Mission, RawData, APIKey, SitePassword, SensorData, TelemetryData
+)
 
 PUBLIC_ROUTES = ["index", "login"]
 
@@ -103,14 +105,28 @@ def rename_mission(mission_id):
 def get_mission_data(mission_id):
     mission = db.get_or_404(Mission, mission_id)
 
-    return jsonify([s.to_dict() for s in mission.data.sensor])
+    data_id = mission.data.id
+    sensor = db.session.execute(
+        db.select(SensorData)
+        .filter_by(data_id=data_id)
+        .order_by(SensorData.time)
+    ).scalars()
+
+    return jsonify([s.to_dict() for s in sensor])
 
 
 @app.route('/mission/<int:mission_id>/telemetry', methods=['GET'])
 def get_mission_telemetry(mission_id):
     mission = db.get_or_404(Mission, mission_id)
 
-    return jsonify([t.to_dict() for t in mission.data.telemetry])
+    data_id = mission.data.id
+    telem = db.session.execute(
+        db.select(TelemetryData)
+        .filter_by(data_id=data_id)
+        .order_by(TelemetryData.time)
+    ).scalars()
+
+    return jsonify([t.to_dict() for t in telem])
 
 
 # @app.route('/mission/<int:mission_id>/data-reduced', methods=['GET'])
