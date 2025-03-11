@@ -9,7 +9,7 @@ from flask_socketio import emit, disconnect, send
 
 from starcar import socketio, db
 from starcar.models import (
-    Mission, StrainGauge, Acceleration, SensorData, TelemetryData, RawData
+    Mission, SensorData, TelemetryData, RawData
 )
 from starcar.utils import get_telem_dist, get_date_string
 from starcar.routes import is_authorized
@@ -21,13 +21,11 @@ def datetime_now():
 
 def add_sensor_data(mission, data):
     for d in data:
-        accel = Acceleration(x=d["accelX"], y=d["accelY"], z=d["accelZ"])
-        gauge = StrainGauge(gauge_1=d["gauge1"], gauge_2=d["gauge2"])
-        
-        sensor = SensorData(
-            time=d["timeStamp"], acceleration=accel, strain_gauge=gauge
-        )
-        mission.data.sensor.append(sensor)
+        mission.data.sensor.append(SensorData(
+            time=d["timeStamp"], acceleration_x=d["accelX"], 
+            acceleration_y=d["accelY"], acceleration_z=d["accelZ"], 
+            gauge_1=d["gauge1"], gauge_2=d["gauge2"]
+        ))
 
 
 def add_telemetry_data(mission, data):

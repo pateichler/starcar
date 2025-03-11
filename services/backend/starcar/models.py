@@ -15,62 +15,68 @@ def datetime_now():
     return dt.datetime.now(dt.UTC)
 
 
-class StrainGauge(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
+# class StrainGauge(db.Model):
+#     id: Mapped[int] = mapped_column(primary_key=True)
 
-    sensor_id: Mapped[int] = mapped_column(ForeignKey("sensor_data.id"))
-    sensor: Mapped["SensorData"] = relationship(back_populates="strain_gauge")
+#     sensor_id: Mapped[int] = mapped_column(ForeignKey("sensor_data.id"))
+#     sensor: Mapped["SensorData"] = relationship(back_populates="strain_gauge")
+
+#     gauge_1: Mapped[int] = mapped_column()
+#     gauge_2: Mapped[int] = mapped_column()
+
+#     def to_dict(self):
+#         return {"gauge_1": self.gauge_1, "gauge_2": self.gauge_2}
+
+
+# class Acceleration(db.Model):
+#     id: Mapped[int] = mapped_column(primary_key=True)
+
+#     sensor_id: Mapped[int] = mapped_column(ForeignKey("sensor_data.id"))
+#     sensor: Mapped["SensorData"] = relationship(back_populates="acceleration")
+
+#     x: Mapped[float] = mapped_column()
+#     y: Mapped[float] = mapped_column()
+#     z: Mapped[float] = mapped_column()
+
+#     def to_dict(self):
+#         return {"x": self.x, "y": self.y, "z": self.z}
+
+
+class SensorData(db.Model):
+    __tablename__ = "sensor_data"
+    # id: Mapped[int] = mapped_column(primary_key=True)
+
+    data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"), primary_key=True)
+
+    time: Mapped[int] = mapped_column(primary_key=True)
+
+    acceleration_x: Mapped[float] = mapped_column()
+    acceleration_y: Mapped[float] = mapped_column()
+    acceleration_z: Mapped[float] = mapped_column()
 
     gauge_1: Mapped[int] = mapped_column()
     gauge_2: Mapped[int] = mapped_column()
 
     def to_dict(self):
-        return {"gauge_1": self.gauge_1, "gauge_2": self.gauge_2}
-
-
-class Acceleration(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-
-    sensor_id: Mapped[int] = mapped_column(ForeignKey("sensor_data.id"))
-    sensor: Mapped["SensorData"] = relationship(back_populates="acceleration")
-
-    x: Mapped[float] = mapped_column()
-    y: Mapped[float] = mapped_column()
-    z: Mapped[float] = mapped_column()
-
-    def to_dict(self):
-        return {"x": self.x, "y": self.y, "z": self.z}
-
-
-class SensorData(db.Model):
-    __tablename__ = "sensor_data"
-    id: Mapped[int] = mapped_column(primary_key=True)
-
-    data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"))
-
-    time: Mapped[int] = mapped_column()
-    acceleration: Mapped["Acceleration"] = relationship(
-        back_populates="sensor",
-        cascade="all, delete"
-    )
-    strain_gauge: Mapped["StrainGauge"] = relationship(
-        back_populates="sensor",
-        cascade="all, delete"
-    )
-
-    def to_dict(self):
         return {
-            "time": self.time, "acceleration": self.acceleration.to_dict(), 
-            "gauge": self.strain_gauge.to_dict()
+            "time": self.time, "acceleration": {
+                "x": self.acceleration_x,
+                "y": self.acceleration_y,
+                "z": self.acceleration_z
+            },
+            "gauge": {
+                "gauge_1": self.gauge_1,
+                "gauge_2": self.gauge_2
+            }
         }
 
 
 class TelemetryData(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
+    # id: Mapped[int] = mapped_column(primary_key=True)
 
-    data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"))
+    data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"), primary_key=True)
 
-    time: Mapped[int] = mapped_column()
+    time: Mapped[int] = mapped_column(primary_key=True)
     latt: Mapped[float] = mapped_column()
     lng: Mapped[float] = mapped_column()
 
