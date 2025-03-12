@@ -137,6 +137,11 @@ class Analysis(db.Model):
             "is_pending": self.is_pending
         }
 
+    __mapper_args__ = {
+        "polymorphic_identity": "Analysis",
+        "polymorphic_on": "name",
+    }
+
 
 # This is a test analysis table
 class AnalysisOne(Analysis):
@@ -145,6 +150,10 @@ class AnalysisOne(Analysis):
     gauge_1_average: Mapped[float] = mapped_column()
     gauge_2_average: Mapped[float] = mapped_column()
 
+    __mapper_args__ = {
+        "polymorphic_identity": "Analysis 1",
+    }
+
 
 class AnomalyAnalysis(Analysis):
     id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), primary_key=True)
@@ -152,11 +161,19 @@ class AnomalyAnalysis(Analysis):
     # anomalies = mapped_column(ARRAY(Integer, dimensions=1), nullable=False)
     num_anomalies: Mapped[int] = mapped_column()
 
+    __mapper_args__ = {
+        "polymorphic_identity": "Analysis Anomaly",
+    }
+
 
 class StressAnalysis(Analysis):
     id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), primary_key=True)
 
     coefficent: Mapped[float] = mapped_column()
+
+    __mapper_args__ = {
+        "polymorphic_identity": "Analysis Stress",
+    }
 
 
 # class AnalysisData(db.Model):
