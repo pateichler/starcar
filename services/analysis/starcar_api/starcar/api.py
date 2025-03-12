@@ -30,7 +30,11 @@ class StarcarAPI:
             "Authorization": f'Bearer {self.api_key}'
         }
 
-        return requests.get(url, headers=headers)
+        r = requests.get(url, headers=headers)
+        if r.status_code == 401:
+            raise Exception("API key not authorized!")
+
+        return r
 
     def post_api_dict(self, route: str, data: dict):
         url = urljoin(self.api_url, route)
@@ -40,7 +44,11 @@ class StarcarAPI:
             'Accept': 'text/plain'
         }
 
-        return requests.post(url, data=json.dumps(data), headers=headers)
+        r = requests.post(url, data=json.dumps(data), headers=headers)
+        if r.status_code == 401:
+            raise Exception("API key not authorized!")
+
+        return r
 
     def get_data(self, mission_id: int):
         r = self.fetch_api(f"/mission/{mission_id}/data")
