@@ -12,7 +12,7 @@ if app.config["DEBUG"] is True:
 
 # TODO: Load in
 analysis_config = [{
-  "name": "Analysis 1",
+  "name": "analysis-one",
   "image_name": "pateichler/starcar-analysis1:latest"
 }]
 
@@ -79,5 +79,5 @@ class KubeAnalysisRunner(AnalysisRunner):
         db.session.commit()
 
         for c in analysis_config:
-            job_name = f'{c["name"]} - Mission {mission_id}'
+            job_name = f'{c["name"]}-mission-{mission_id}'
             self.run_job(job_name, c["image_name"], api_key_val, mission_id)

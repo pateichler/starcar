@@ -4,7 +4,7 @@ metadata:
   name: starcar-backend-config
 data:
   FLASK_APP: "starcar/__init__.py"
-  FLASK_DEBUG: "1"
+  FLASK_DEBUG: "0"
   STARCAR_SECRET_KEY: "secret!"
   STARCAR_SQLALCHEMY_DATABASE_URI: "postgresql://dev:password@starcar-db-service:5432/starcar_dev"
 
