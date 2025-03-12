@@ -313,7 +313,7 @@ def get_all_api_keys():
     schema = APIKeySchema()
 
     api_keys = db.session.scalars(
-        db.select(APIKey).filter(APIKey.hidden is False)
+        db.select(APIKey).filter_by(hidden=False)
         .order_by(APIKey.date_created)
     ).all()
 
