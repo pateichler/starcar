@@ -276,7 +276,8 @@ def get_all_api_keys():
     schema = APIKeySchema()
 
     api_keys = db.session.scalars(
-        db.select(APIKey).order_by(APIKey.date_created)
+        db.select(APIKey).filter(APIKey.hidden is False)
+        .order_by(APIKey.date_created)
     ).all()
 
     return jsonify([schema.dump(t) for t in api_keys])

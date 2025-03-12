@@ -224,6 +224,8 @@ class APIKey(db.Model):
     date_created: Mapped[dt.datetime] = mapped_column()
     date_expire: Mapped[Optional[dt.datetime]] = mapped_column()
 
+    hidden: Mapped[bool] = mapped_column()
+
     def is_expired(self):
         return (
             datetime_now() > self.date_expire.replace(tzinfo=timezone.utc) 
@@ -250,7 +252,7 @@ class APIKey(db.Model):
     #     }
 
     @staticmethod
-    def generate(name, exp_days=None, description=None):
+    def generate(name, exp_days=None, description=None, hidden=False):
         key_val = secrets.token_hex(32)
         key_hash = bcrypt.generate_password_hash(key_val).decode('utf-8')
         now = datetime_now()
@@ -260,7 +262,7 @@ class APIKey(db.Model):
         
         api_key = APIKey(
             name=name, enc_value=key_hash, description=description,
-            date_created=now, date_expire=exp_date
+            date_created=now, date_expire=exp_date, hidden=hidden
         )
 
         db.session.add(api_key)
