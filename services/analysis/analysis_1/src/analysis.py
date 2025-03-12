@@ -1,3 +1,5 @@
+# Example analysis script, this doesn't do much
+
 from os import environ
 
 from starcar import StarcarAPI
@@ -12,6 +14,16 @@ except ValueError:
 
 data = api.get_data(mission_id)
 
-print(data[:100])
+c = len(data)
+a_1 = 0
+a_2 = 0
+for i in range(c):
+    a_1 += data["gauge"]["gauge_1"] / c
+    a_2 += data["gauge"]["gauge_2"] / c
 
-# Do stuff with data
+api.post_analysis_one({
+    "gauge_1_average": a_1,
+    "gauge_2_average": a_2
+})
+
+print("Finished analysis")

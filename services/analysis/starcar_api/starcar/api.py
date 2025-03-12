@@ -1,6 +1,7 @@
 from typing import Optional
 from os import environ
 from urllib.parse import urljoin
+import json
 
 import requests
 
@@ -31,6 +32,16 @@ class StarcarAPI:
 
         return requests.get(url, headers=headers)
 
+    def post_api_dict(self, route: str, data: dict):
+        url = urljoin(self.api_url, route)
+        headers = {
+            "Authorization": f'Bearer {self.api_key}',
+            'Content-type': 'application/json', 
+            'Accept': 'text/plain'
+        }
+
+        return requests.post(url, data=json.dumps(data), headers=headers)
+
     def get_data(self, mission_id: int):
         r = self.fetch_api(f"/mission/{mission_id}/data")
         return r.json()
@@ -38,3 +49,7 @@ class StarcarAPI:
     def get_telemetry(self, mission_id: int):
         r = self.fetch_api(f"/mission/{mission_id}/telemetry")
         return r.json()
+
+    def post_analysis_one(self, mission_id: int, data: dict):
+        r = self.post_api_dict(f"/mission/{mission_id}/analysis-one/create", data)
+        return r
