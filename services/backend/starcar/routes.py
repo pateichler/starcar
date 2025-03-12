@@ -272,7 +272,7 @@ def post_analysis_one_data(mission_id):
 
     analysis = AnalysisOne(
         gauge_1_average=raw_data["gauge_1_average"],
-        gauge_1_average=raw_data["gauge_2_average"],
+        gauge_2_average=raw_data["gauge_2_average"],
         name="Analysis 1",
         date_start=datetime_now(),
         date_end=datetime_now(),
@@ -280,7 +280,7 @@ def post_analysis_one_data(mission_id):
         is_pending=False,
     )
 
-    mission.append(analysis)
+    mission.analysis.append(analysis)
     db.session.commit()
 
 
