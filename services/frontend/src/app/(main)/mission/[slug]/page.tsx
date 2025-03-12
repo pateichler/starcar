@@ -36,7 +36,7 @@ export default async function Page({params,}: {
                 </Suspense>
             </InteractContextComponent>
 
-            { mission.analysis ? (
+            { mission.analysis && mission.analysis.length > 0 ? (
                 <div>
                     <h2>Analysis</h2>
                     <AnalysisOne mission={mission} />
