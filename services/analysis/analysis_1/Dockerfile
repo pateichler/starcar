@@ -35,3 +35,5 @@ COPY ./analysis_1/src /app/src/
 RUN chown -R app:app /app
 
 USER app
+
+ENTRYPOINT ["python", "src/analysis.py"]

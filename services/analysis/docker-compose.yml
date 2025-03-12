@@ -9,7 +9,6 @@ services:
       platforms:
         - "linux/arm64/v8"
         - "linux/amd64"
-    command: python src/analysis.py
     environment:
      - MISSION_ID=10
      - API_KEY=2_ea807feec9ed97b62f4148651661c450d7c8f2e9210972ee790079f3cc2042e9
