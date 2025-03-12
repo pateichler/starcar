@@ -4,4 +4,11 @@ export type Mission = {
     date_start: string;
     date_end?: string;
     total_dist: number;
+    analysis?: AnalysisDescription[]
 };
+
+export type AnalysisDescription = {
+    name: string
+    health_status: number,
+    is_pending: boolean
+}

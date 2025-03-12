@@ -5,6 +5,7 @@ import TelemetryPanel from "./telemetryPanel";
 import InteractContextComponent from "./InteractContext";
 import { Suspense } from "react";
 import MissionControlBar from "./missionControlBar";
+import AnalysisOne from "./analysisOne";
 
 
 function timeUpdate(time: number){
@@ -34,6 +35,16 @@ export default async function Page({params,}: {
                     <TelemetryPanel mission={mission} />
                 </Suspense>
             </InteractContextComponent>
+
+            { mission.analysis ? (
+                <div>
+                    <h2>Analysis</h2>
+                    <AnalysisOne mission={mission} />
+                </div>
+            ):(
+                <></>
+            )}
+            
         </div>
     );
 }

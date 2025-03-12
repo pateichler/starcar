@@ -1,4 +1,4 @@
-import { SensorData, TelemetryData, TelemetryPath, TelemetryPoint } from "@/types/data";
+import { Analysis1, SensorData, TelemetryData, TelemetryPath, TelemetryPoint } from "@/types/data";
 import { Mission } from "@/types/mission";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -110,4 +110,12 @@ export async function fetchDeleteAPIKey(keyID: number){
 
 export async function fetchGenerateAPIKey(jsonObj: object){
     return await fectchPostJSON("api-key/new", jsonObj);
+}
+
+export async function fetchAnalysisOneData(missionID: number) : Promise<Analysis1|null>{
+    const data = await fetchAPI(`mission/${missionID}/analysis-one`);
+    if(data.status == 404)
+        return null;
+
+    return await data.json() as Analysis1;
 }

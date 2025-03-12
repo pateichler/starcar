@@ -33,3 +33,8 @@ export type TelemetryPath = {
     time: number[];
     path: [longitude: number, latitude: number][];
 }
+
+export type Analysis1 = {
+    gauge_1_average: number,
+    gauge_2_average: number
+}
