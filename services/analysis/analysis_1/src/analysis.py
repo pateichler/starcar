@@ -14,14 +14,15 @@ except ValueError:
 
 data = api.get_data(mission_id)
 
+print("Starting analysis")
 c = len(data)
 a_1 = 0
 a_2 = 0
-for i in range(c):
-    a_1 += data["gauge"]["gauge_1"] / c
-    a_2 += data["gauge"]["gauge_2"] / c
+for s in data:
+    a_1 += s["gauge"]["gauge_1"] / c
+    a_2 += s["gauge"]["gauge_2"] / c
 
-api.post_analysis_one({
+api.post_analysis_one(mission_id, {
     "gauge_1_average": a_1,
     "gauge_2_average": a_2
 })
