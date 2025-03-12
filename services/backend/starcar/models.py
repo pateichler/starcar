@@ -138,6 +138,14 @@ class Analysis(db.Model):
         }
 
 
+# This is a test analysis table
+class AnalysisOne(Analysis):
+    id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), primary_key=True)
+
+    gauge_1_average: Mapped[float] = mapped_column()
+    gauge_2_average: Mapped[float] = mapped_column()
+
+
 class AnomalyAnalysis(Analysis):
     id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), primary_key=True)
 

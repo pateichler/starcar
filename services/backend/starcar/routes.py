@@ -6,7 +6,7 @@ from jwt.exceptions import InvalidTokenError
 
 from starcar import app, db, flask_jwt
 from starcar.models import (
-    Mission, RawData, APIKey, SitePassword, SensorData, TelemetryData
+    Mission, RawData, APIKey, SitePassword, SensorData, TelemetryData, AnalysisOne
 )
 
 PUBLIC_ROUTES = ["index", "login"]
@@ -261,6 +261,43 @@ def get_all_missions():
     ).all()
 
     return jsonify([m.to_dict() for m in missions])
+
+
+@app.route('/mission/<int:mission_id>/analysis-one/create', methods=['POST'])
+def post_analysis_one_data(mission_id):
+    mission = db.get_or_404(Mission, mission_id)
+
+    raw_data = request.get_json()
+    # TODO: Validate json
+
+    analysis = AnalysisOne(
+        gauge_1_average=raw_data["gauge_1_average"],
+        gauge_1_average=raw_data["gauge_2_average"],
+        name="Analysis 1",
+        date_start=datetime_now(),
+        date_end=datetime_now(),
+        health_status=1,
+        is_pending=False,
+    )
+
+    mission.append(analysis)
+    db.session.commit()
+
+
+@app.route('/mission/<int:mission_id>/analysis-one', methods=['GET'])
+def get_analysis_one_data(mission_id):
+    mission = db.get_or_404(Mission, mission_id)
+
+    if len(mission.analysis) == 0:
+        return "", 404
+
+    # Hard-coded assumed analysis one is first, todo change
+    a = mission.analysis[0]
+
+    return jsonify({
+        "gauge_1_average": a.gauge_1_average,
+        "gauge_2_average": a.gauge_2_average
+    })
 
 
 class APIKeySchema(Schema):
