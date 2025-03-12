@@ -15,6 +15,12 @@ def init():
     db.session.commit()
 
 
+@cli.command("create_all")
+def create_all():
+    db.create_all()
+    db.session.commit()
+
+
 @cli.command("seed")
 def seed():
     # token, token_val = APIToken.generate("root")
