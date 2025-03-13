@@ -15,36 +15,8 @@ def datetime_now():
     return dt.datetime.now(dt.UTC)
 
 
-# class StrainGauge(db.Model):
-#     id: Mapped[int] = mapped_column(primary_key=True)
-
-#     sensor_id: Mapped[int] = mapped_column(ForeignKey("sensor_data.id"))
-#     sensor: Mapped["SensorData"] = relationship(back_populates="strain_gauge")
-
-#     gauge_1: Mapped[int] = mapped_column()
-#     gauge_2: Mapped[int] = mapped_column()
-
-#     def to_dict(self):
-#         return {"gauge_1": self.gauge_1, "gauge_2": self.gauge_2}
-
-
-# class Acceleration(db.Model):
-#     id: Mapped[int] = mapped_column(primary_key=True)
-
-#     sensor_id: Mapped[int] = mapped_column(ForeignKey("sensor_data.id"))
-#     sensor: Mapped["SensorData"] = relationship(back_populates="acceleration")
-
-#     x: Mapped[float] = mapped_column()
-#     y: Mapped[float] = mapped_column()
-#     z: Mapped[float] = mapped_column()
-
-#     def to_dict(self):
-#         return {"x": self.x, "y": self.y, "z": self.z}
-
-
 class SensorData(db.Model):
     __tablename__ = "sensor_data"
-    # id: Mapped[int] = mapped_column(primary_key=True)
 
     data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"), primary_key=True)
 
@@ -72,8 +44,6 @@ class SensorData(db.Model):
 
 
 class TelemetryData(db.Model):
-    # id: Mapped[int] = mapped_column(primary_key=True)
-
     data_id: Mapped[int] = mapped_column(ForeignKey("raw_data.id"), primary_key=True)
 
     time: Mapped[int] = mapped_column(primary_key=True)
@@ -113,8 +83,6 @@ class RawData(db.Model):
             where(TelemetryData.data_id == cls.id).
             label('total_dist')
         )
-    # sensor_reduced: Mapped[List["SensorData"]] = relationship(overlaps="data,sensor")
-    # telemetry_reduced: Mapped[List["TelemetryData"]] = relationship(overlaps="data,telemetry")
 
 
 class Analysis(db.Model):
@@ -123,7 +91,6 @@ class Analysis(db.Model):
     mission_id: Mapped[int] = mapped_column(ForeignKey("mission.id"))
     mission: Mapped["Mission"] = relationship(back_populates="analysis")
     
-    # date_start: Mapped[dt.datetime] = mapped_column(DateTime(), default_factory=datetime_now)
     name: Mapped[str] = mapped_column(String(200))
     date_start: Mapped[dt.datetime] = mapped_column()
     date_end: Mapped[Optional[dt.datetime]] = mapped_column()
@@ -155,10 +122,10 @@ class AnalysisOne(Analysis):
     }
 
 
+# Currently not used Table
 class AnomalyAnalysis(Analysis):
     id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), primary_key=True)
 
-    # anomalies = mapped_column(ARRAY(Integer, dimensions=1), nullable=False)
     num_anomalies: Mapped[int] = mapped_column()
 
     __mapper_args__ = {
@@ -166,6 +133,7 @@ class AnomalyAnalysis(Analysis):
     }
 
 
+# Currently not used Table
 class StressAnalysis(Analysis):
     id: Mapped[int] = mapped_column(ForeignKey("analysis.id"), primary_key=True)
 
@@ -174,17 +142,6 @@ class StressAnalysis(Analysis):
     __mapper_args__ = {
         "polymorphic_identity": "Analysis Stress",
     }
-
-
-# class AnalysisData(db.Model):
-#     __tablename__ = "analysis_data"
-#     id: Mapped[int] = mapped_column(primary_key=True)
-
-#     mission_id: Mapped[int] = mapped_column(ForeignKey("mission.id"))
-#     mission: Mapped["Mission"] = relationship(back_populates="analysis")
-
-#     anomaly: Mapped["AnomalyAnalysis"] = relationship(back_populates="analysis")
-#     stress: Mapped["StressAnalysis"] = relationship(back_populates="analysis")
 
 
 class Mission(db.Model):
@@ -269,13 +226,6 @@ class APIKey(db.Model):
     def regenerate_key(self, exp_days=None):
         pass
 
-    # def to_dict(self):
-    #     return {
-    #         "name": self.name,
-    #         "is-expired": self.is_expired(),
-    #         "date-expire": self.date_expire.isoformat()
-    #     }
-
     @staticmethod
     def generate(name, exp_days=None, description=None, hidden=False):
         key_val = secrets.token_hex(32)
@@ -296,15 +246,3 @@ class APIKey(db.Model):
         key_val = f'{str(api_key.id)}_{key_val}'
 
         return api_key, key_val
-
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return db.session.get(User, user_id)
-
-
-# class User(db.Model, UserMixin):
-#     id: Mapped[int] = mapped_column(primary_key=True)
-
-#     username: Mapped[str] = mapped_column(String(200))
-#     password: Mapped[str] = mapped_column(String(60))

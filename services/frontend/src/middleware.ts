@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { cookies } from "next/headers";
 import { CRED_COOKIE_NAME } from "@/config"; 
 
 export default function middleware(request: NextRequest) {

@@ -7,12 +7,6 @@ import { Suspense } from "react";
 import MissionControlBar from "./missionControlBar";
 import AnalysisOne from "./analysisOne";
 
-
-function timeUpdate(time: number){
-    console.log("We have updated our time!");
-}
-
-
 export default async function Page({params,}: {
     params: Promise<{ slug: number }>
 }) {

@@ -8,7 +8,9 @@ from starcar import app, db
 from starcar.models import APIKey
 
 if app.config["DEBUG"] is True:
-    raise ImportError("Can't import KubeAnalysisRunner while in testing environment")
+    raise ImportError(
+        "Can't import KubeAnalysisRunner while in testing environment"
+    )
 
 # TODO: Load in
 analysis_config = [{
@@ -25,7 +27,9 @@ class KubeAnalysisRunner(AnalysisRunner):
         # API route for analysis containers
         self.api_route = environ.get("API_ROUTE")
 
-    def create_job_object(self, name: str, image_name: str, envs: Dict[str, str]):
+    def create_job_object(
+        self, name: str, image_name: str, envs: Dict[str, str]
+    ):
         k_envs = [client.V1EnvVar(name=k, value=v) for k, v in envs.items()]
 
         container = client.V1Container(
@@ -56,7 +60,9 @@ class KubeAnalysisRunner(AnalysisRunner):
             body=job,
             namespace=namespace)
 
-    def run_job(self, name: str, image_name: str, api_key: str, mission_id: int):
+    def run_job(
+        self, name: str, image_name: str, api_key: str, mission_id: int
+    ):
         envs = {
             "API_KEY": api_key,
             "MISSION_ID": str(mission_id)

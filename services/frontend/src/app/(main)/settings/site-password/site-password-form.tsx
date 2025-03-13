@@ -1,8 +1,6 @@
 'use client'
 
-import { EXP_DAYS_OPTIONS } from "@/config";
 import { useActionState } from "react";
-import FormError from "@/components/form-error";
 import FormGroup from "@/components/form-group";
 import { setSitePassword } from "./site-password-action";
 

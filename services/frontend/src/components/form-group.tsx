@@ -7,8 +7,9 @@ interface InputChildren {
 }
 
 export default function FormGroup({labelName, error, children}: {labelName: string, error?: ErrorMessage, children: React.ReactNode}){
-    // Could get input name dynamically from children
     let inputName = "";
+
+    // Get input name dynamically from child with attribute with key "name"
     React.Children.toArray(children).every(function(child, _) {
         if(!React.isValidElement<InputChildren>(child))
             return true;

@@ -1,12 +1,13 @@
 import datetime as dt
 
-from flask import jsonify, request, abort
+from flask import jsonify, request
 from marshmallow import Schema, fields, validate, ValidationError
 from jwt.exceptions import InvalidTokenError
 
 from starcar import app, db, flask_jwt
 from starcar.models import (
-    Mission, RawData, APIKey, SitePassword, SensorData, TelemetryData, AnalysisOne
+    Mission, RawData, APIKey, SitePassword, SensorData, TelemetryData, 
+    AnalysisOne
 )
 
 PUBLIC_ROUTES = ["index", "login"]
@@ -18,7 +19,11 @@ def datetime_now():
 
 @app.route('/')
 def index():
-    return ("<p>API for Starcar. See documentation for full list of API usage.</p>", 200)
+    return (
+        """
+        <p>API for Starcar. See documentation for full list of API usage.</p>
+        """, 200
+    )
 
 
 @app.route('/mission/create', methods=['POST'])
@@ -89,17 +94,6 @@ def rename_mission(mission_id):
 
     return "", 200
 
-# @app.route('/mission/<int:mission_id>/data', methods=['GET'])
-# def get_mission_data(mission_id):
-#     mission = db.get_or_404(Mission, mission_id)
-
-#     d = {
-#         "sensor": [s.to_dict() for s in mission.data.sensor],
-#         "telemetry": [t.to_dict() for t in mission.data.telemetry]
-#     }
-
-#     return jsonify(d)
-
 
 @app.route('/mission/<int:mission_id>/data', methods=['GET'])
 def get_mission_data(mission_id):
@@ -129,40 +123,6 @@ def get_mission_telemetry(mission_id):
     return jsonify([t.to_dict() for t in telem])
 
 
-# @app.route('/mission/<int:mission_id>/data-reduced', methods=['GET'])
-# def get_mission_data_reduced(mission_id):
-#     mission = db.get_or_404(Mission, mission_id)
-#     max_sensor_arg = request.args.get('max_sensor', 1500, type=int)
-#     max_telemetry_arg = request.args.get('max_telemetry', 2500, type=int)
-
-#     sensor = []
-#     if len(mission.data.sensor) > 0:
-#         max_sensor_size = min(len(mission.data.sensor), max_sensor_arg)    
-#         for i in range(max_sensor_size):
-#             sensor.append(
-#                 mission.data.sensor[
-#                     int(i * len(mission.data.sensor) / max_sensor_size)
-#                 ].to_dict()
-#             )
-
-#     telemetry = []
-#     if len(mission.data.telemetry) > 0:
-#         max_telemetry_size = min(len(mission.data.telemetry), max_telemetry_arg)
-#         for i in range(max_telemetry_size):
-#             telemetry.append(
-#                 mission.data.telemetry[
-#                     int(i * len(mission.data.telemetry) / max_telemetry_size)
-#                 ].to_dict()
-#             )
-
-#     d = {
-#         "sensor": sensor,
-#         "telemetry": telemetry,
-#     }
-
-#     return jsonify(d)
-
-
 @app.route('/mission/<int:mission_id>/data-reduced', methods=['GET'])
 def get_mission_data_reduced(mission_id):
     mission = db.get_or_404(Mission, mission_id)
@@ -179,36 +139,6 @@ def get_mission_data_reduced(mission_id):
             )
 
     return jsonify(sensor)
-
-
-# @app.route('/mission/<int:mission_id>/data-reduced', methods=['GET'])
-# def get_mission_data_reduced(mission_id):
-#     mission = db.get_or_404(Mission, mission_id)
-#     max_sensor_arg = request.args.get('max_sensor', 1500, type=int)
-
-#     time = []
-#     x_accel, y_accel, z_accel = [], [], [] 
-#     gauge_1, gauge_2 = [], []
-
-#     if len(mission.data.sensor) > 0:
-#         max_sensor_size = min(len(mission.data.sensor), max_sensor_arg)    
-#         for i in range(max_sensor_size):
-#             s = mission.data.sensor[
-#                 int(i * len(mission.data.sensor) / max_sensor_size)
-#             ]
-            
-#             time.append(s.time)
-#             x_accel.append(s.acceleration.x)
-#             y_accel.append(s.acceleration.y)
-#             z_accel.append(s.acceleration.z)
-#             gauge_1.append(s.strain_gauge.gauge_1)
-#             gauge_2.append(s.strain_gauge.gauge_2)
-
-#     return jsonify({
-#         "time": time, 
-#         "acceleration": {"x": x_accel, "y": y_accel, "z": z_accel},
-#         "gauge": {"1": gauge_1, "2": gauge_2}
-#     })
 
 
 @app.route('/mission/<int:mission_id>/telemetry-reduced', methods=['GET'])
@@ -357,30 +287,6 @@ def delete_api_key(api_id):
     db.session.delete(api_key)
     db.session.commit()
 
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-
-#     if data is None or "username" not in data or "password" not in data:
-#         abort(422)
-
-#     print(f'Getting user: {data["username"]}')
-#     user = db.session.execute(
-#         db.select(User).filter_by(username=data["username"])
-#     ).scalar_one_or_none()
-
-#     if user and bcrypt.check_password_hash(user.password, data["password"]):
-#         login_user(user, remember=data.get("remember", False))
-#         return "", 200
-#     else:
-#         abort(401)
-
-
-# @app.route('/logout', methods=['POST'])
-# def logout():
-#     logout_user()
-#     return "", 200
-
 
 class PasswordSchema(Schema):
     password = fields.String(required=True)
@@ -440,7 +346,10 @@ def verify_api_token(token):
 
     token_obj = db.session.get(APIKey, token_id)
 
-    return token_obj if token_obj is not None and token_obj.validate(token_val) else None
+    return (
+        token_obj if token_obj is not None and token_obj.validate(token_val) 
+        else None
+    )
 
 
 def verify_pass_token(token):

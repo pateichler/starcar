@@ -2,7 +2,6 @@
 
 import { fetchGenerateAPIKey } from '@/lib/api';
 import { ErrorMessage } from '@/types/error-message';
-import {redirect} from 'next/navigation';
 
 type GenerateResult = {
     apiKey?: string
@@ -17,7 +16,6 @@ export async function generateAPI(prevState: GenerateResult | undefined, formDat
         "description": formData.get("description")
     }
 
-    // Object.fromEntries(formData.entries())
     const response = await fetchGenerateAPIKey(data);
     
     
@@ -31,5 +29,4 @@ export async function generateAPI(prevState: GenerateResult | undefined, formDat
 
     const keyData = await response.json();
     return {apiKey: keyData.key};
-    // redirect('/settings/api-keys');
 }

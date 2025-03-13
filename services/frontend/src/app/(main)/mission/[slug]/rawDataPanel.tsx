@@ -1,5 +1,5 @@
 import { Mission } from "@/types/mission";
-import { fetchMission, fetchMissionData, fetchTelemetryData, fetchTelemetryPath } from "@/lib/api"
+import { fetchMissionData } from "@/lib/api"
 import RawDataGraph from "./rawDataGraph";
 
 

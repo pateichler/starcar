@@ -3,7 +3,6 @@
 import { EXP_DAYS_OPTIONS } from "@/config";
 import { useActionState } from "react";
 import { generateAPI } from "./generate-action";
-import FormError from "@/components/form-error";
 import FormGroup from "@/components/form-group";
 
 export default function APIGenerateForm(){

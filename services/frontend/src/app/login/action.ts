@@ -7,8 +7,6 @@ export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
   ) {
-    console.log("Submitting!!!");
-
     const password = formData.get('password');
 
     const response = await fetch(`${process.env.API_ROUTE}login`, {

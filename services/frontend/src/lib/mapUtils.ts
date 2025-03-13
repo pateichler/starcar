@@ -15,7 +15,6 @@ function getLerpValue(val: number, min: number, max: number): number{
 }
 
 export function getTelemetryColors(telemetry: TelemetryData, minColor: Color, maxColor: Color): Color[]{
-    // console.log("Total  time: " + ((telemetry.data[telemetry.data.length - 1].time - telemetry.data[0].time)/1000));
     return telemetry.data.map((p, index, arr) => {
         if(index == 0)
             return lerpColor(minColor, maxColor, 0);
@@ -26,7 +25,6 @@ export function getTelemetryColors(telemetry: TelemetryData, minColor: Color, ma
 
         // const t = getLerpValue(p.distance / p.time, telemetry.maxVel, telemetry.maxVel);
         const t = getLerpValue(1000 * p.distance / tDiff, 0, 5);
-        // console.log("Time (s): " + tDiff + ", distance (m): " + (1000*p.distance) + ", speed: " + (1000 * p.distance / tDiff) + ", t: " + t);
         return lerpColor(minColor, maxColor, t);
     });
 }

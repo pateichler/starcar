@@ -2,6 +2,8 @@ import jwt
 
 
 class FlaskJWT:
+    """Helper class for generating JWT tokens with the flask SECRET_KEY config
+    """
     
     def __init__(self, app, algorithm="HS256"):
         self.config = app.config

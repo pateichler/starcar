@@ -1,12 +1,10 @@
 'use client'
 
 import { SensorData } from "@/types/data";
-import { CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis, Label, Legend } from "recharts";
+import { Line, ResponsiveContainer, Tooltip, XAxis, YAxis, Label, Legend } from "recharts";
 import dynamic from "next/dynamic";
-import { convertTimestampToDate, formatChartDuration } from "@/lib/utils";
-import { CategoricalChartState } from "recharts/types/chart/types";
-import { InteractContext } from "./InteractContext";
-import { useState, useContext } from "react";
+import { formatChartDuration } from "@/lib/utils";
+import { useState } from "react";
 import { convertRawAcceleration, convertRawGaugeToStrain } from "@/lib/dataUtils"
 
 

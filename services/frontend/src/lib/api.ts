@@ -31,9 +31,6 @@ async function fetchAPI(route: string, options: RequestInit = {}): Promise<Respo
         
 
     return f;
-    // return fetch("http://192.168.0.101:5050/" + route, {
-    //     headers: await headers(),
-    // });
 }
 
 async function fectchPostJSON(route: string, postObj: object){

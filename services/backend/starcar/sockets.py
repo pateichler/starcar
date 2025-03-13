@@ -5,7 +5,7 @@ from datetime import timezone
 import zoneinfo as zi
 
 from sqlalchemy import exc
-from flask_socketio import emit, disconnect, send
+from flask_socketio import emit, disconnect
 
 from starcar import socketio, db
 from starcar.models import (
@@ -45,7 +45,6 @@ def add_telemetry_data(mission, data):
         telemetry = TelemetryData(
             time=d["timeStamp"], latt=d["latt"], lng=d["lng"], dist=dist
         )
-        print(f'Distance traveled: {dist}km')
 
         mission.data.telemetry.append(telemetry)
         last_telem = telemetry
@@ -102,8 +101,6 @@ def stream_data(json_data):
         )
         return
 
-    print(f'Received data for mission: {data["missionID"]}')
-
     add_sensor_data(mission, data["sensorData"])
     add_telemetry_data(mission, data["telemetryData"])
 
@@ -137,14 +134,8 @@ def stop_stream(json_data):
     ).astimezone(zi.ZoneInfo("US/Central"))
     mission.name = get_date_string(start_local_time)
 
-    # duration = dt.timedelta(
-    #     (mission.date_end - mission.date_start.replace(tzinfo=timezone.utc))
-    #     .total_seconds()
-    # )
-
     db.session.commit()
 
     analysis_runner.run_analysis(mission.id)
 
-    # return "OK", duration.hours, duration.minutes
     return "OK"
