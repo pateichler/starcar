@@ -1,5 +1,7 @@
 # Starcar
 
+![Starcar overview](https://github.com/pateichler/starcar/starcar_overview.png)
+
 Starcar is a personal project for recording and displaying data recorded from my car. The data is then intended to be used with analysis to determine characteristics of the car. 
 
 
