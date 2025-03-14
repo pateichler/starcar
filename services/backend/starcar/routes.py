@@ -99,10 +99,9 @@ def rename_mission(mission_id):
 def get_mission_data(mission_id):
     mission = db.get_or_404(Mission, mission_id)
 
-    data_id = mission.data.id
     sensor = db.session.execute(
         db.select(SensorData)
-        .filter_by(data_id=data_id)
+        .filter_by(data_id=mission.data.id)
         .order_by(SensorData.time)
     ).scalars()
 
@@ -113,10 +112,9 @@ def get_mission_data(mission_id):
 def get_mission_telemetry(mission_id):
     mission = db.get_or_404(Mission, mission_id)
 
-    data_id = mission.data.id
     telem = db.session.execute(
         db.select(TelemetryData)
-        .filter_by(data_id=data_id)
+        .filter_by(data_id=mission.data.id)
         .order_by(TelemetryData.time)
     ).scalars()
 
@@ -128,15 +126,24 @@ def get_mission_data_reduced(mission_id):
     mission = db.get_or_404(Mission, mission_id)
     max_sensor_arg = request.args.get('max_sensor', 1500, type=int)
 
+    total_sensor = db.session.scalars(
+        db.select(SensorData)
+        .filter_by(data_id=mission.data.id)
+        .order_by(SensorData.time)
+    ).all()
+
+    max_sensor_size = min(len(total_sensor), max_sensor_arg)
+    if len(total_sensor) <= max_sensor_size:
+        return jsonify([s.to_dict() for s in total_sensor])
+
     sensor = []
-    if len(mission.data.sensor) > 0:
-        max_sensor_size = min(len(mission.data.sensor), max_sensor_arg)    
-        for i in range(max_sensor_size):
-            sensor.append(
-                mission.data.sensor[
-                    int(i * len(mission.data.sensor) / max_sensor_size)
-                ].to_dict()
-            )
+    
+    for i in range(max_sensor_size):
+        sensor.append(
+            total_sensor[
+                int(i * len(total_sensor) / max_sensor_size)
+            ].to_dict()
+        )
 
     return jsonify(sensor)
 
@@ -146,15 +153,23 @@ def get_mission_telemetry_reduced(mission_id):
     mission = db.get_or_404(Mission, mission_id)
     max_telemetry_arg = request.args.get('max_telemetry', 2500, type=int)
 
+    total_telem = db.session.scalars(
+        db.select(TelemetryData)
+        .filter_by(data_id=mission.data.id)
+        .order_by(TelemetryData.time)
+    ).all()
+
+    max_telemetry_size = min(len(total_telem), max_telemetry_arg)
+    if len(total_telem) <= max_telemetry_size:
+        return jsonify([t.to_dict() for t in total_telem])
+
     telemetry = []
-    if len(mission.data.telemetry) > 0:
-        max_telemetry_size = min(len(mission.data.telemetry), max_telemetry_arg)
-        for i in range(max_telemetry_size):
-            telemetry.append(
-                mission.data.telemetry[
-                    int(i * len(mission.data.telemetry) / max_telemetry_size)
-                ].to_dict()
-            )
+    for i in range(max_telemetry_size):
+        telemetry.append(
+            total_telem[
+                int(i * len(total_telem) / max_telemetry_size)
+            ].to_dict()
+        )
 
     return jsonify(telemetry)
 

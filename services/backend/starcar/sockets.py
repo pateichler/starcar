@@ -30,9 +30,11 @@ def add_sensor_data(mission, data):
 
 
 def add_telemetry_data(mission, data):
-    last_telem = (
-        mission.data.telemetry[-1] if len(mission.data.telemetry) > 0 else None
-    )
+    last_telem = db.session.scalars(
+        db.select(TelemetryData)
+        .filter_by(data_id=mission.data.id)
+        .order_by(TelemetryData.time.desc())
+    ).first()
 
     for d in data:
         dist = 0
