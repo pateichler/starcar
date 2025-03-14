@@ -6,8 +6,6 @@ export default async function TelemetryPanel({mission}: {mission: Mission}){
     const telemetry = await fetchTelemetryData(mission.id);
 
     return (
-        <div>
-            <TelemetryViewer telemetry={telemetry} />
-        </div>
+        <TelemetryViewer telemetry={telemetry} />
     );
 }

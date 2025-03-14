@@ -1,0 +1,11 @@
+.pannel{
+    background-color: rgb(32, 32, 32);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.pannel h3{
+    margin-left: 30px;
+    margin-bottom: 0;
+}

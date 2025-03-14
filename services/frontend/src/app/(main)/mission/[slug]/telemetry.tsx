@@ -31,7 +31,7 @@ export default function TelemetryViewer({telemetry}: {telemetry: TelemetryData|n
     });
 
     return (
-        <div style={{width: "480px", height: "480px", position: "relative"}}>
+        <div style={{height: "100%", position: "relative"}}>
             <DeckGL 
                 initialViewState={{
                     longitude: telemetry.data[0].lng,
