@@ -174,31 +174,6 @@ def get_mission_telemetry_reduced(mission_id):
     return jsonify(telemetry)
 
 
-@app.route('/mission/<int:mission_id>/telemetry-path', methods=['GET'])
-def get_mission_telemetry_path(mission_id):
-    mission = db.get_or_404(Mission, mission_id)
-    max_telemetry_arg = request.args.get('max_telemetry', 2500, type=int)
-
-    time = []
-    dist = []
-    coords = []
-    if len(mission.data.telemetry) > 0:
-        max_telemetry_size = min(len(mission.data.telemetry), max_telemetry_arg)
-        for i in range(max_telemetry_size):
-            t = mission.data.telemetry[
-                int(i * len(mission.data.telemetry) / max_telemetry_size)
-            ]
-            time.append(t.time)
-            coords.append([t.lng, t.latt])
-            dist.append(t.dist)
-
-    return jsonify({
-        "time": time,
-        "path": coords,
-        "dist": dist
-    })
-
-
 @app.route('/get-all-missions', methods=['GET'])
 def get_all_missions():
     missions = db.session.scalars(
