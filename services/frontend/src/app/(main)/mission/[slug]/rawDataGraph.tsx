@@ -4,26 +4,20 @@ import { SensorData } from "@/types/data";
 import { Line, ResponsiveContainer, Tooltip, XAxis, YAxis, Label, Legend } from "recharts";
 import dynamic from "next/dynamic";
 import { formatChartDuration } from "@/lib/utils";
-import { useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 import { convertRawAcceleration, convertRawGaugeToStrain } from "@/lib/dataUtils"
+import { InteractContext } from "./InteractContext";
+import { CategoricalChartState } from "recharts/types/chart/types";
 
 
-// function generateCallback(onTimeUpdate: (time: number) => void): (nextState: CategoricalChartState, _: any) => void{
-//     function onMove(nextState: CategoricalChartState, _: any){
-//         if(nextState.activePayload !== undefined)
-//             onTimeUpdate(nextState.activePayload[0].payload.time);
-//     }
+function generateCallback(onTimeUpdate: (time: number) => void): (nextState: CategoricalChartState, _: SyntheticEvent) => void{
+    function onMove(nextState: CategoricalChartState, _: SyntheticEvent){
+        if(nextState.activePayload !== undefined)
+            onTimeUpdate(nextState.activePayload[0].payload.time);
+    }
 
-//     return onMove;
-// }
-
-
-// function move(nextState: CategoricalChartState, _: any){
-    
-//     if(nextState.activePayload !== undefined){
-//         console.log(nextState.activePayload[0].payload.time);
-//     }
-// }
+    return onMove;
+}
 
 const LineChart = dynamic( () => (import("recharts").then(recharts => recharts.LineChart)), {
     ssr: false
@@ -31,6 +25,8 @@ const LineChart = dynamic( () => (import("recharts").then(recharts => recharts.L
 
 export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
     const [activeSeries, setActiveSeries] = useState<Array<string>>([]);
+    const { setTime } = useContext(InteractContext);
+    const moveCallback = generateCallback(setTime);
 
     if (rawData == null)
         return <div>Error in retreiving data.</div>
@@ -53,7 +49,7 @@ export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             <h3>Raw Mission Data</h3>
             <ResponsiveContainer>
-                <LineChart data={accelerationData} syncId={"data"}>
+                <LineChart data={accelerationData} syncId={"data"} onMouseMove={moveCallback}>
                     <Line hide={activeSeries.includes('x')} name="Acceleration X" type={"monotone"} dataKey={"x"}  stroke={"#8884d8"} dot={false} />
                     <Line hide={activeSeries.includes('y')} name="Acceleration Y" type={"monotone"} dataKey={"y"}  stroke={"#20a418"} dot={false} />
                     <Line hide={activeSeries.includes('z')} name="Acceleration Z" type={"monotone"} dataKey={"z"}  stroke={"#9bbb04"} dot={false} />
@@ -65,7 +61,7 @@ export default function RawDataGraph({rawData}: {rawData: SensorData[]|null }){
                 </LineChart>
             </ResponsiveContainer>
             <ResponsiveContainer>
-                <LineChart data={strainData} syncId={"data"}>
+                <LineChart data={strainData} syncId={"data"} onMouseMove={moveCallback}>
                     <Line hide={activeSeries.includes('gaugeLeft')} name="Left strut" type={"monotone"} dataKey={"gaugeLeft"}  stroke={"#8884d8"} dot={false} />
                     <Line hide={activeSeries.includes('gaugeRight')} name="Right strut" type={"monotone"} dataKey={"gaugeRight"}  stroke={"#20a418"} dot={false} />
                     <XAxis dataKey={"time"} tickFormatter={formatChartDuration}>

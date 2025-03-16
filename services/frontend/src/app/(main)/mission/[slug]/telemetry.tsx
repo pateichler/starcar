@@ -1,13 +1,19 @@
 'use client'
 
-import { getTelemetryColors } from "@/lib/mapUtils";
+import { getLocationAtTelemetryTime, getTelemetryColors } from "@/lib/mapUtils";
 import { TelemetryData } from "@/types/data";
-import { PathLayer } from '@deck.gl/layers';
+import { PathLayer, ScatterplotLayer } from '@deck.gl/layers';
 import DeckGL from "@deck.gl/react";
+import { useContext, useState } from "react";
 import { Map } from "react-map-gl/maplibre";
+import { InteractContext } from "./InteractContext";
+import { MapViewState } from "deck.gl";
 
 
 export default function TelemetryViewer({telemetry}: {telemetry: TelemetryData|null }){
+    const { curTime } = useContext(InteractContext);
+    const [ viewZoom, setViewZoom ] = useState(14);
+    
     if (telemetry == null)
         return <div>No telemetry available.</div>
     
@@ -30,16 +36,39 @@ export default function TelemetryViewer({telemetry}: {telemetry: TelemetryData|n
         widthMaxPixels: 5
     });
 
+    const curPoint = getLocationAtTelemetryTime(telemetry, curTime);
+
+    const posLayer = new ScatterplotLayer({
+        id: "PositionLayer",
+        data: [curPoint],
+
+        getPosition: [curPoint[0], curPoint[1]],
+        
+
+        stroked: true,
+        getFillColor: [40, 200, 40],
+        getLineColor: [255,255,255],
+        
+        getRadius: 20,
+        radiusMinPixels: 7,
+        radiusMaxPixels: 10,
+
+        getLineWidth: 10,
+        lineWidthMinPixels: 2,
+        lineWidthMaxPixels: 4,
+    });
+
     return (
         <div style={{height: "100%", position: "relative"}}>
             <DeckGL 
                 initialViewState={{
-                    longitude: telemetry.data[0].lng,
-                    latitude: telemetry.data[0].latt,
-                    zoom: 14
+                    longitude: curPoint[0],
+                    latitude: curPoint[1],
+                    zoom: viewZoom
                 }}
                 controller
-                layers={[layer]}
+                layers={[layer, posLayer]}
+                onViewStateChange={({viewState}) => setViewZoom((viewState as MapViewState).zoom)}
             >
                 <Map mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json" />
             </DeckGL>
