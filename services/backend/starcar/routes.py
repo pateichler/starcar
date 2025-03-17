@@ -3,6 +3,7 @@ import datetime as dt
 from flask import jsonify, request
 from marshmallow import Schema, fields, validate, ValidationError
 from jwt.exceptions import InvalidTokenError
+from sqlalchemy import and_
 
 from starcar import app, db, flask_jwt
 from starcar.models import (
@@ -125,10 +126,16 @@ def get_mission_telemetry(mission_id):
 def get_mission_data_reduced(mission_id):
     mission = db.get_or_404(Mission, mission_id)
     max_sensor_arg = request.args.get('max_sensor', 1500, type=int)
+    min_time_arg = request.args.get('min_time', 0, type=int)
+    max_time_arg = request.args.get('max_time', 2**31-1, type=int)
 
     total_sensor = db.session.scalars(
         db.select(SensorData)
-        .filter_by(data_id=mission.data.id)
+        .filter(and_(
+            SensorData.data_id == mission.data.id, 
+            SensorData.time >= min_time_arg, 
+            SensorData.time <= max_time_arg
+        ))
         .order_by(SensorData.time)
     ).all()
 
