@@ -62,12 +62,12 @@ export default function RawDataGraph({rawData, mission}: {rawData: SensorData[]|
     };
 
     function handleMouseDown(nextState: CategoricalChartState, _event: SyntheticEvent){
-        if(nextState.activePayload !== undefined)
+        if(nextState !== null && nextState.activePayload !== undefined)
             setStartTimeSelection(parseInt(nextState.activePayload[0].payload.time));
     }
 
     function handleMouseMove(nextState: CategoricalChartState, _event: SyntheticEvent){
-        if(nextState.activePayload !== undefined && startTimeSelection)
+        if(nextState !== null && nextState.activePayload !== undefined && startTimeSelection)
             setEndTimeSelection(parseInt(nextState.activePayload[0].payload.time));
 
         moveSyncCallback(nextState);
