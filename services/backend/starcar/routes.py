@@ -210,6 +210,8 @@ def post_analysis_one_data(mission_id):
     mission.analysis.append(analysis)
     db.session.commit()
 
+    return "", 200
+
 
 @app.route('/mission/<int:mission_id>/analysis-one', methods=['GET'])
 def get_analysis_one_data(mission_id):
