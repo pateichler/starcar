@@ -13,6 +13,15 @@
     flex-direction: row-reverse;
 }
 
+.quickStatsContainer{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.quickStatsContainer > div{
+    flex: 1 1 150px;
+}
+
 @media (max-width: 768px) {
     .dataContainer{
         display: block;

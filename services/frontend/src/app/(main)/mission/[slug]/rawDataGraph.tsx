@@ -92,7 +92,7 @@ export default function RawDataGraph({rawData, mission}: {rawData: SensorData[]|
     return (
         <div style={{width: "100%", height: "100%", display: "flex", flexDirection: "column"}}>
             <div>
-                <h3>Raw Mission Data</h3>
+                <h3 className="title">Raw Mission Data</h3>
                 {leftTimeBound && rightTimeBound ? (
                     <button style={{marginLeft: "25px"}} onClick={() => {setLeftTimeBound(0); setRightTimeBound(0);}}>Zoom out</button>
                 ) : <></>}

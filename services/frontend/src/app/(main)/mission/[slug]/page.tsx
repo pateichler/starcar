@@ -9,6 +9,7 @@ import MissionControlBar from "./missionControlBar";
 import AnalysisOne from "./analysisOne";
 import Pannel from "@/components/pannel/pannel";
 import LoadingIcon from "@/components/loading-icon/loading-icon";
+import { formatAverageSpeed, formatDuration } from "@/lib/utils";
 
 export default async function Page({params,}: {
     params: Promise<{ slug: number }>
@@ -24,6 +25,21 @@ export default async function Page({params,}: {
         <div>
             <MissionControlBar mission={mission} />
             
+            <div className={styles.quickStatsContainer}>
+                <Pannel>
+                    <h4 className="title">Duration</h4>
+                    <h2 className="value">{formatDuration(mission.date_start, mission.date_end, true)}</h2>
+                </Pannel>
+                <Pannel>
+                    <h4 className="title">Distance</h4>
+                    <h2 className="value">{mission.total_dist.toFixed(2)} km</h2>
+                </Pannel>
+                <Pannel>
+                    <h4 className="title">Average speed</h4>
+                    <h2 className="value">{formatAverageSpeed(mission.total_dist, mission.date_start, mission.date_end)}</h2>
+                </Pannel>
+            </div>
+
             <InteractContextComponent>
                 <div className={styles.dataContainer}>
                     <Pannel style={{flex: "1 1 auto"}}>

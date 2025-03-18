@@ -5,7 +5,11 @@
     margin: 10px;
 }
 
-.pannel h3{
+.pannel :global(.title){
     margin-left: 30px;
     margin-bottom: 0;
+}
+
+.pannel :global(.value){
+    text-align: center;
 }
