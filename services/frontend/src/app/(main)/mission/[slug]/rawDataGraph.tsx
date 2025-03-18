@@ -32,7 +32,7 @@ export default function RawDataGraph({rawData, mission}: {rawData: SensorData[]|
     const [endTimeSelection, setEndTimeSelection]  = useState<number|null>(null);
 
     const { setTime, leftTimeBound, rightTimeBound, setLeftTimeBound, setRightTimeBound } = useContext(InteractContext);
-    const moveCallback = generateCallback(setTime);
+    const moveSyncCallback = generateCallback(setTime);
     
 
     useEffect(() => {
@@ -70,7 +70,7 @@ export default function RawDataGraph({rawData, mission}: {rawData: SensorData[]|
         if(nextState.activePayload !== undefined && startTimeSelection)
             setEndTimeSelection(parseInt(nextState.activePayload[0].payload.time));
 
-        moveCallback(nextState);
+        moveSyncCallback(nextState);
     }
 
     function handleMouseUp(_nextState: CategoricalChartState, _event: SyntheticEvent){
@@ -114,7 +114,7 @@ export default function RawDataGraph({rawData, mission}: {rawData: SensorData[]|
                 </LineChart>
             </ResponsiveContainer>
             <ResponsiveContainer>
-                <LineChart data={strainData} syncId={"data"} onMouseMove={moveCallback}>
+                <LineChart data={strainData} syncId={"data"} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
                     <Line hide={activeSeries.includes('gaugeLeft')} name="Left strut" type={"monotone"} dataKey={"gaugeLeft"}  stroke={"#8884d8"} dot={false} isAnimationActive={false} />
                     <Line hide={activeSeries.includes('gaugeRight')} name="Right strut" type={"monotone"} dataKey={"gaugeRight"}  stroke={"#20a418"} dot={false} isAnimationActive={false} />
                     <XAxis dataKey={"time"} tickFormatter={formatChartDuration}>
