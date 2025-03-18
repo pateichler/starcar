@@ -22,6 +22,35 @@
     flex: 1 1 150px;
 }
 
+.analysisTable{
+    margin-top: 10px;
+    width: 100%;
+    text-align: left;
+    border-spacing: 0px;
+}
+
+.analysisTable thead{
+    background-color: #373737;
+}
+
+.analysisTable tr{
+    padding: 0px 20px;
+}
+
+.analysisTable td, .analysisTable th {
+    padding: 15px 10px;
+}
+
+.analysisTable th:first-child{
+    padding-left: 25px;
+}
+
+.analysisTable th:last-child, .analysisTable td:last-child{
+    padding-right: 25px;
+}
+
+
+
 @media (max-width: 768px) {
     .dataContainer{
         display: block;
