@@ -8,6 +8,7 @@ export type Mission = {
 };
 
 export type AnalysisDescription = {
+    id: number,
     name: string
     health_status: number,
     is_pending: boolean
