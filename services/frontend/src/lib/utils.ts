@@ -24,7 +24,7 @@ export function formatDuration(dateStringStart: string, dateStringEnd?: string, 
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     
-    const secondsString = `${Math.floor(diff / 1000)}s`;
+    const secondsString = `${ Math.floor(diff / 1000) % 60 }s`;
 
     if(fullString)
         return `${hours}h ${minutes}m ${secondsString}`;
