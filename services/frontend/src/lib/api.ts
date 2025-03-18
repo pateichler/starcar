@@ -66,7 +66,7 @@ export async function fetchDeleteMission(missionID: number){
 }
 
 export async function fetchMissionData(missionID: number, minTime: number|null = null, maxTime: number|null = null): Promise<SensorData[]|null> {
-    let params: {min_time?: string, max_time?: string} = {};
+    const params: {min_time?: string, max_time?: string} = {};
     if(minTime != null)
         params.min_time = minTime.toString();
     if(maxTime != null)
