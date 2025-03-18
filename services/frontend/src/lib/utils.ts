@@ -10,24 +10,32 @@ export function formatDateWithTime(dateString: string){
     const dString = formatDate(dateString);
     return `${dString}, ${date.toLocaleTimeString()}`;
 }
-  
-export function formatDuration(dateStringStart: string, dateStringEnd?: string){
+
+// Difference in dates in milliseconds
+function getDateDifference(dateStringStart: string, dateStringEnd: string): number{
+    return new Date(dateStringEnd).getTime() - new Date(dateStringStart).getTime();
+}
+
+export function formatDuration(dateStringStart: string, dateStringEnd?: string, fullString: boolean = false){
     if(dateStringEnd === undefined)
-        return "pending"
+        return "pending";
   
-    const dateStart = new Date(dateStringStart).getTime();
-    const dateEnd = new Date(dateStringEnd).getTime();
-  
-    const diff = dateEnd - dateStart;
+    const diff = getDateDifference(dateStringStart, dateStringEnd);
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     
+    const secondsString = `${Math.floor(diff / 1000)}s`;
+
+    if(fullString)
+        return `${hours}h ${minutes}m ${secondsString}`;
+
     if(hours > 0)
         return `${hours}h ${minutes}m`;
+
     if(minutes > 0)
         return `${minutes}m`
     
-    return `${Math.floor(diff / 1000)}s`
+    return secondsString;
 }
 
 export function formatChartDuration(milliseconds: number){
@@ -47,4 +55,14 @@ export function convertTimestampToDate(timestamp: string): string {
         minute: '2-digit',
         second: '2-digit',
     }).format(new Date(timestamp));
+}
+
+export function formatAverageSpeed(distance: number, dateStringStart: string, dateStringEnd?: string, units: string = "km/hr"){
+    if(dateStringEnd === undefined)
+        return "N/A";
+
+    const diff = getDateDifference(dateStringStart, dateStringEnd);
+    const hoursDiff = diff / (1000 * 60 * 60);
+
+    return `${(distance/hoursDiff).toFixed(2)} ${units}`;
 }

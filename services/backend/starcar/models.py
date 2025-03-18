@@ -99,6 +99,7 @@ class Analysis(db.Model):
 
     def to_dict(self):
         return {
+            "id": self.id,
             "name": self.name,
             "health_status": self.health_status,
             "is_pending": self.is_pending

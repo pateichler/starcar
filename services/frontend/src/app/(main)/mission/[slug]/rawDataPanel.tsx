@@ -7,6 +7,6 @@ export default async function RawDataPanel({mission}: {mission: Mission}){
     const data = await fetchMissionData(mission.id);
 
     return (
-        <RawDataGraph rawData={data} />
+        <RawDataGraph rawData={data} mission={mission} />
     )
 }

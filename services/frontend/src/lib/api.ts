@@ -65,8 +65,16 @@ export async function fetchDeleteMission(missionID: number){
     return fetchAPI(`/mission/${missionID}/delete`, {'method': 'POST'});
 }
 
-export async function fetchMissionData(missionID: number): Promise<SensorData[]|null> {
-    const data = await fetchAPI(`mission/${missionID}/data-reduced`);
+export async function fetchMissionData(missionID: number, minTime: number|null = null, maxTime: number|null = null): Promise<SensorData[]|null> {
+    var params: {min_time?: string, max_time?: string} = {};
+    if(minTime != null)
+        params.min_time = minTime.toString();
+    if(maxTime != null)
+        params.max_time = maxTime.toString();
+    
+    const data = await fetchAPI(`mission/${missionID}/data-reduced?${
+        new URLSearchParams(params)
+    }`);
     if(data.status == 404)
         return null;
 
