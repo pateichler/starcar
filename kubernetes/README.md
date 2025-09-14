@@ -1,16 +1,19 @@
 # Kubernetes Deployment
 
-Follow the instructions to deploy application via Kubernetes with the following environments.
+Follow the instructions to deploy the application via Kubernetes in the following environments.
 
 ## Test
 
-Test environment is setup without secret keys. Do not use test deployment on prodcution.
+> [!WARNING]
+> Do not use test deployment on production!
 
-Deploy on your Kubernetes cluster via command line by simply applying the configuration files:
+Test environment is setup without secret keys. Deploy on your Kubernetes cluster via command line by simply applying the configuration files:
 
 ```
-kubectl apply -f kubernetes/test
+kubectl apply -f path/to/kubernetes/test
 ```
+> [!NOTE]
+> `path/to/kubernetes/test` is location of Kubernetes test files (path is `kubernetes/test` from project root).
 
 After deploying, initialize the deployed datbase by running the init and seed commands to the backend container:
 ```
@@ -28,5 +31,5 @@ kubectl create secret generic secret-key -n starcar --from-literal=key='{your_se
 
 After configuring secret keys, apply production files:
 ```
-kubectl apply -f kubernetes/prod
+kubectl apply -f path/to/kubernetes/prod
 ```
