@@ -12,6 +12,9 @@ if app.config["DEBUG"] is True:
         "Can't import KubeAnalysisRunner while in testing environment"
     )
 
+if "NO_K8" in app.config and app.config["NO_K8"] is True:
+    raise ImportError("Avoiding using Kubernetes")
+
 # TODO: Load in
 analysis_config = [{
   "name": "analysis-one",
